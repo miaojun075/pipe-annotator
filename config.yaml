@@ -1,0 +1,86 @@
+# ============================================================
+# 管件智能识别系统 v2.0 - 配置文件
+# ============================================================
+
+# -------- 摄像头设置 --------
+camera:
+  width: 640
+  height: 480
+  fps: 15
+  camera_id: 0
+
+# -------- 背景模式 --------
+# mode: "green_screen" (绿布分割) | "auto" (Otsu自动阈值，适用于任何对比背景)
+background:
+  mode: "auto"
+
+# -------- 绿布背景 HSV 阈值 --------
+green_screen:
+  lower: [35, 50, 50]
+  upper: [85, 255, 255]
+  morph_kernel: 5
+  min_contour_area: 500
+
+# -------- 自动分割参数（mode=auto 时生效）--------
+auto_segmentation:
+  method: "otsu"          # 分割方法：canny / adaptive / hsv / otsu
+  blur_ksize: 3              # 高斯模糊核大小（canny/adaptive 用）
+  canny_low: 25              # Canny 低阈值
+  canny_high: 80             # Canny 高阈值
+  dilate_kernel: 3           # 膨胀核大小
+  dilate_iterations: 1       # 膨胀迭代次数
+  close_kernel: 5            # 闭运算核大小
+  open_kernel: 3             # 开运算核大小
+  min_contour_area: 100      # 最小轮廓面积（像素）(非otsu方法用)
+  otsu_min_area: 2000         # 原图分辨率下最小轮廓面积
+  otsu_tophat_kernel: 0      # Otsu Top-hat 核大小（0=禁用；原图下用200-400px椭圆形核减掉台面背景）
+  otsu_bridge_kernel: 9       # Otsu 桥接核大小（原图分辨率下合并纹理碎片）
+  otsu_max_area_ratio: 0.2   # Otsu 最大轮廓占比（灰底台面需更严，绿布用0.3）
+  max_area_ratio: 0.3        # 最大轮廓占比（非Otsu方法用）
+  # --- 自适应阈值参数 ---
+  adaptive_block: 21         # 自适应阈值块大小（奇数）
+  adaptive_c: 8              # 自适应阈值常数
+  # --- HSV 颜色分割参数 ---
+  hsv_saturation_max: 45     # 金属件最大饱和度
+  hsv_value_min: 80          # 最小亮度
+  hsv_value_max: 255         # 最大亮度
+  hsv_blur_ksize: 5          # HSV 掩码高斯模糊
+  # --- V 通道阈值参数（低饱和度图片用）---
+  otsu: 170              # V 通道阈值（亮=物体，暗=背景）
+
+# -------- 检测参数 --------
+detection:
+  min_contour_area: 2000      # Detector 最小轮廓面积（原图分辨率）
+  orb_max_features: 500
+  match_threshold_high: 0.7
+  match_threshold_low: 0.4
+  contour_similarity_weight: 0.5
+  orb_similarity_weight: 0.5
+
+# -------- 自动检测触发 --------
+auto_detect:
+  enabled: true              # 是否启用自动检测
+  interval_ms: 1500          # 检测间隔（毫秒）
+  stability_frames: 8        # 画面稳定帧数（连续稳定帧才触发）
+  change_threshold: 0.2      # 前景像素变化比例阈值
+  min_fg_pixels: 500         # 最小前景像素（低于此值认为无物品）
+
+# -------- 预定义类别列表 --------
+categories:
+  - "弯头"
+  - "三通"
+  - "法兰"
+  - "阀门"
+  - "变径"
+  - "堵头"
+  - "管箍"
+
+# -------- 出入库会话 --------
+session:
+  export_dir: "./exports"
+  company_name: ""
+
+# -------- 数据库 --------
+database:
+  path: "templates.db"
+  max_undo_steps: 50

@@ -1,0 +1,10 @@
+opencv-python
+opencv-contrib-python
+numpy
+Pillow
+pyyaml
+openpyxl
+transformers
+torch
+torchvision
+ultralytics
